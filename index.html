@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Obfuscator - Premium Flat Minimalist Tool</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- JS Obfuscator Library CDN (Sebagai Fallback Lokal) -->
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f4f7fe',
+                            100: '#e8effd',
+                            500: '#3b82f6', // Flat Blue
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        },
+                        dark: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            800: '#0f172a',
+                            900: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2 rounded-xl flex items-center justify-center shadow-sm">
+                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight text-slate-900 flex items-center gap-2">
+                        JS Obfuscator
+                        <span class="text-xs font-semibold px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full border border-blue-100">Hybrid Version</span>
+                    </h1>
+                    <p class="text-xs text-slate-500">Amankan kode JavaScript Anda secara instan dan aman</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- Mode Selektor (Worker API vs Local Engine) -->
+                <div class="bg-slate-100 p-1 rounded-xl flex items-center gap-1 border border-slate-200">
+                    <button onclick="setEngineMode('api')" id="engine-api" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all bg-white text-blue-600 shadow-sm">
+                        <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                        Cloudflare API
+                    </button>
+                    <button onclick="setEngineMode('local')" id="engine-local" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-600 hover:text-slate-900">
+                        <i data-lucide="laptop" class="w-3.5 h-3.5"></i>
+                        Lokal Browser
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
+        
+        <!-- Quick Preset Selection -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1">
+                <h2 class="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-4 h-4 text-blue-500"></i>
+                    Pilih Preset Proteksi
+                </h2>
+                <p class="text-xs text-slate-500">Tentukan seberapa agresif teknik pengacakan kode yang ingin diterapkan</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-2 sm:w-auto w-full">
+                <!-- Preset Low -->
+                <button onclick="applyPreset('low')" id="btn-preset-low" class="preset-btn px-4 py-2.5 rounded-xl border text-xs font-medium transition-all flex flex-col items-center gap-1 bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300">
+                    <span class="font-bold text-slate-900">Low</span>
+                    <span class="text-[10px] text-slate-400">Ringan & Cepat</span>
+                </button>
+                <!-- Preset Medium -->
+                <button onclick="applyPreset('medium')" id="btn-preset-medium" class="preset-btn px-4 py-2.5 rounded-xl border text-xs font-medium transition-all flex flex-col items-center gap-1 bg-blue-50 border-blue-200 text-blue-700 ring-2 ring-blue-100">
+                    <span class="font-bold text-blue-900">Medium</span>
+                    <span class="text-[10px] text-blue-500">Direkomendasikan</span>
+                </button>
+                <!-- Preset High -->
+                <button onclick="applyPreset('high')" id="btn-preset-high" class="preset-btn px-4 py-2.5 rounded-xl border text-xs font-medium transition-all flex flex-col items-center gap-1 bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300">
+                    <span class="font-bold text-slate-900">High</span>
+                    <span class="text-[10px] text-slate-400">Proteksi Maksimal</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid Editor Utama -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            
+            <!-- Kolom Input (Asli) -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col overflow-hidden h-[500px]">
+                <div class="bg-slate-50/50 px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                        <span class="text-xs font-semibold text-slate-700 tracking-wide">KODE JAVASCRIPT ASLI</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="loadDemoCode()" class="text-xs text-blue-600 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1">
+                            <i data-lucide="code-2" class="w-3.5 h-3.5"></i>
+                            Gunakan Demo
+                        </button>
+                        <button onclick="clearInput()" class="text-xs text-slate-500 hover:text-slate-800 hover:bg-slate-100 p-1.5 rounded-lg transition-all" title="Bersihkan">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Area Editor -->
+                <div class="flex-grow flex relative">
+                    <!-- Line Numbers Simulasian -->
+                    <div id="input-lines" class="w-12 bg-slate-50 border-r border-slate-100 text-slate-400 text-xs text-right pr-2.5 pt-4 select-none code-font leading-relaxed">
+                        1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10
+                    </div>
+                    <textarea 
+                        id="input-code" 
+                        oninput="updateLineNumbers('input-code', 'input-lines')" 
+                        class="flex-grow p-4 resize-none outline-none border-none text-xs code-font leading-relaxed text-slate-800 focus:ring-0 placeholder:text-slate-400"
+                        placeholder="// Tempel atau ketik kode JavaScript Anda di sini...&#10;function sapaDunia() {&#10;    const pesan = 'Halo, Dunia!';&#10;    console.log(pesan);&#10;}&#10;sapaDunia();"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Kolom Output (Ter-obfuscate) -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col overflow-hidden h-[500px]">
+                <div class="bg-slate-50/50 px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        <span class="text-xs font-semibold text-slate-700 tracking-wide">KODE TER-OBFUSCATE</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="copyOutput()" class="text-xs bg-slate-900 text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            Salin Kode
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Area Editor Hasil -->
+                <div class="flex-grow flex relative bg-slate-950">
+                    <div id="output-lines" class="w-12 bg-slate-900/50 border-r border-slate-800/40 text-slate-600 text-xs text-right pr-2.5 pt-4 select-none code-font leading-relaxed">
+                        1
+                    </div>
+                    <textarea 
+                        id="output-code" 
+                        readonly 
+                        class="flex-grow p-4 resize-none outline-none border-none text-xs code-font leading-relaxed text-emerald-400 bg-slate-950 focus:ring-0 placeholder:text-slate-600"
+                        placeholder="// Hasil obfuscation akan muncul di sini..."
+                    ></textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tombol Eksekusi Utama -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+                <i data-lucide="lock" class="w-4 h-4 text-slate-400"></i>
+                <span id="security-note">Proses kompilasi aman dienkripsi via Cloudflare Worker API.</span>
+            </div>
+            
+            <button onclick="obfuscateCode()" id="btn-obfuscate" class="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-2xl shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 transition-all flex items-center justify-center gap-2.5 text-sm tracking-wide">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>Acak Kode Sekarang (Obfuscate)</span>
+            </button>
+        </div>
+
+        <!-- Advance Options & Statistik Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Statistik Hasil -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between h-fit">
+                <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="bar-chart-3" class="w-4.5 h-4.5 text-blue-500"></i>
+                    Statistik Kompresi
+                </h3>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                        <span class="text-xs text-slate-500">Ukuran Awal</span>
+                        <span id="stat-original-size" class="text-xs font-semibold text-slate-700">-</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                        <span class="text-xs text-slate-500">Ukuran Hasil</span>
+                        <span id="stat-obfuscated-size" class="text-xs font-semibold text-slate-700">-</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                        <span class="text-xs text-slate-500">Rasio Perubahan</span>
+                        <span id="stat-ratio" class="text-xs font-bold text-blue-600">-</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-xs text-slate-500">Waktu Proses</span>
+                        <span id="stat-time" class="text-xs font-semibold text-slate-700">-</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-slate-50 rounded-xl p-3 text-[11px] text-slate-500 leading-relaxed border border-slate-100">
+                    <span class="font-medium text-slate-700">Catatan:</span> Proses obfuscation biasanya meningkatkan ukuran file karena adanya penambahan generator string acak dan teknik pengamanan beralur acak.
+                </div>
+            </div>
+
+            <!-- Advance Options Panel (2 Columns) -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm lg:col-span-2">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="sliders-horizontal" class="w-4.5 h-4.5 text-blue-500"></i>
+                        Opsi Lanjutan (Kustomisasi)
+                    </h3>
+                    <button onclick="resetOptions()" class="text-xs text-slate-400 hover:text-slate-600 font-medium flex items-center gap-1 transition-all">
+                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+                        Reset
+                    </button>
+                </div>
+
+                <!-- Custom Grid Options -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Opsi 1: Compact -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" id="opt-compact" checked class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 w-4 h-4">
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-800">Compact Code</span>
+                            <span class="block text-[10px] text-slate-500">Hapus baris baru dan spasi (minifikasi).</span>
+                        </div>
+                    </label>
+
+                    <!-- Opsi 2: Self Defending -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" id="opt-self-defending" class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 w-4 h-4">
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-800">Self Defending</span>
+                            <span class="block text-[10px] text-slate-500">Kode akan rusak otomatis jika diformat ulang/beautify.</span>
+                        </div>
+                    </label>
+
+                    <!-- Opsi 3: Rename Variables -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" id="opt-rename" checked class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 w-4 h-4">
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-800">Ubah Nama Variabel</span>
+                            <span class="block text-[10px] text-slate-500">Acak seluruh nama variabel dan fungsi global.</span>
+                        </div>
+                    </label>
+
+                    <!-- Opsi 4: String Array -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" id="opt-strings" checked class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 w-4 h-4">
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-800">Enkripsi String Literal</span>
+                            <span class="block text-[10px] text-slate-500">Ekstrak string ke array acak & enkripsi dengan base64.</span>
+                        </div>
+                    </label>
+
+                    <!-- Opsi 5: Control Flow Flattening -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" id="opt-control-flow" class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 w-4 h-4">
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-800">Control Flow Flattening</span>
+                            <span class="block text-[10px] text-slate-500">Persulit alur jalannya program (menurunkan performa).</span>
+                        </div>
+                    </label>
+
+                    <!-- Opsi 6: Dead Code Injection -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" id="opt-dead-code" class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 w-4 h-4">
+                        <div>
+                            <span class="block text-xs font-semibold text-slate-800">Injeksi Kode Mati (Dead Code)</span>
+                            <span class="block text-[10px] text-slate-500">Tambahkan kode acak tak berguna untuk mengecoh analis.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-200 bg-white py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <p>© 2026 JS Obfuscator. Dibuat dengan cinta untuk keamanan kode Anda.</p>
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span> Semua Sistem Normal</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 translate-y-20 opacity-0 transition-all duration-300 z-50 text-xs font-medium">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400" id="toast-icon"></i>
+        <span id="toast-message">Kode berhasil disalin!</span>
+    </div>
+
+    <!-- Script Utama Logika Aplikasi -->
+    <script>
+        // Inisialisasi ikon Lucide
+        lucide.createIcons();
+
+        // Konfigurasi Engine Default (api / local)
+        let engineMode = 'api';
+        
+        // ALAMAT BACKEND WORKER ANDA
+        // Silakan ganti alamat ini dengan endpoint URL asli Cloudflare Worker Anda setelah mendeploy
+        const WORKER_URL = 'https://js-obfuscator.mvstream.workers.dev'; 
+
+        // Variabel penampung konfigurasi aktif
+        let currentPreset = 'medium';
+
+        // Menyamakan sinkronisasi scroll textarea dan nomor baris
+        function updateScroll(textareaId, linesId) {
+            const textarea = document.getElementById(textareaId);
+            const lines = document.getElementById(linesId);
+            lines.scrollTop = textarea.scrollTop;
+        }
+
+        // Memperbarui hitungan jumlah baris
+        function updateLineNumbers(textareaId, linesId) {
+            const textarea = document.getElementById(textareaId);
+            const lines = document.getElementById(linesId);
+            
+            const linesCount = textarea.value.split('\n').length;
+            let linesHTML = '';
+            for (let i = 1; i <= Math.max(linesCount, 1); i++) {
+                linesHTML += i + '<br>';
+            }
+            lines.innerHTML = linesHTML;
+            updateScroll(textareaId, linesId);
+        }
+
+        // Mengganti Engine Mode dari UI Header
+        function setEngineMode(mode) {
+            engineMode = mode;
+            const btnApi = document.getElementById('engine-api');
+            const btnLocal = document.getElementById('engine-local');
+            const secNote = document.getElementById('security-note');
+
+            if (mode === 'api') {
+                btnApi.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all bg-white text-blue-600 shadow-sm';
+                btnLocal.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-600 hover:text-slate-900';
+                secNote.innerText = 'Proses kompilasi aman dienkripsi via Cloudflare Worker API.';
+                showToast('Engine beralih ke: Cloudflare Worker API');
+            } else {
+                btnLocal.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all bg-white text-blue-600 shadow-sm';
+                btnApi.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-600 hover:text-slate-900';
+                secNote.innerText = 'Proses dilakukan 100% lokal di browser Anda.';
+                showToast('Engine beralih ke: Client Browser Lokal');
+            }
+        }
+
+        // Bind event scroll secara manual
+        document.getElementById('input-code').addEventListener('scroll', () => {
+            updateScroll('input-code', 'input-lines');
+        });
+        document.getElementById('output-code').addEventListener('scroll', () => {
+            updateScroll('output-code', 'output-lines');
+        });
+
+        // Demo Code
+        function loadDemoCode() {
+            const demo = `// Fungsi demo matematika rahasia
+function hitungBonusKaryawan(gajiPokok, jamLembur) {
+    const tarifLembur = 55000;
+    let bonusTambahan = 0;
+    
+    if (jamLembur > 10) {
+        bonusTambahan = 150000;
+    }
+    
+    const totalBonus = (jamLembur * tarifLembur) + bonusTambahan;
+    const totalDiterima = gajiPokok + totalBonus;
+    
+    console.log("Menghitung gaji rahasia...");
+    return totalDiterima;
+}
+
+const totalGaji = hitungBonusKaryawan(5000000, 12);
+console.log("Total Gaji Diterima: Rp " + totalGaji);`;
+
+            document.getElementById('input-code').value = demo;
+            updateLineNumbers('input-code', 'input-lines');
+            showToast('Kode demo berhasil dimuat!');
+        }
+
+        // Hapus input
+        function clearInput() {
+            document.getElementById('input-code').value = '';
+            updateLineNumbers('input-code', 'input-lines');
+            showToast('Input berhasil dibersihkan.');
+        }
+
+        // Reset semua opsi lanjutan ke default
+        function resetOptions() {
+            document.getElementById('opt-compact').checked = true;
+            document.getElementById('opt-self-defending').checked = false;
+            document.getElementById('opt-rename').checked = true;
+            document.getElementById('opt-strings').checked = true;
+            document.getElementById('opt-control-flow').checked = false;
+            document.getElementById('opt-dead-code').checked = false;
+            showToast('Opsi kustomisasi direset.');
+        }
+
+        // Preset Manager
+        function applyPreset(preset) {
+            currentPreset = preset;
+            
+            // Atur gaya aktif pada tombol preset
+            const presets = ['low', 'medium', 'high'];
+            presets.forEach(p => {
+                const btn = document.getElementById(`btn-preset-${p}`);
+                btn.className = 'preset-btn px-4 py-2.5 rounded-xl border text-xs font-medium transition-all flex flex-col items-center gap-1 bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300';
+                
+                // Cari elemen anak di dalam tombol dan ubah warnanya ke warna default abu-abu
+                const childSpan = btn.children;
+                childSpan[0].className = 'font-bold text-slate-900';
+                childSpan[1].className = 'text-[10px] text-slate-400';
+            });
+
+            const activeBtn = document.getElementById(`btn-preset-${preset}`);
+            activeBtn.className = 'preset-btn px-4 py-2.5 rounded-xl border text-xs font-medium transition-all flex flex-col items-center gap-1 bg-blue-50 border-blue-200 text-blue-700 ring-2 ring-blue-100';
+            activeBtn.children[0].className = 'font-bold text-blue-900';
+            activeBtn.children[1].className = 'text-[10px] text-blue-500';
+
+            // Ubah Opsi Lanjutan berdasar Preset
+            if (preset === 'low') {
+                document.getElementById('opt-compact').checked = true;
+                document.getElementById('opt-self-defending').checked = false;
+                document.getElementById('opt-rename').checked = false;
+                document.getElementById('opt-strings').checked = false;
+                document.getElementById('opt-control-flow').checked = false;
+                document.getElementById('opt-dead-code').checked = false;
+            } else if (preset === 'medium') {
+                document.getElementById('opt-compact').checked = true;
+                document.getElementById('opt-self-defending').checked = false;
+                document.getElementById('opt-rename').checked = true;
+                document.getElementById('opt-strings').checked = true;
+                document.getElementById('opt-control-flow').checked = false;
+                document.getElementById('opt-dead-code').checked = false;
+            } else if (preset === 'high') {
+                document.getElementById('opt-compact').checked = true;
+                document.getElementById('opt-self-defending').checked = true;
+                document.getElementById('opt-rename').checked = true;
+                document.getElementById('opt-strings').checked = true;
+                document.getElementById('opt-control-flow').checked = true;
+                document.getElementById('opt-dead-code').checked = true;
+            }
+
+            showToast(`Preset diganti ke: ${preset.toUpperCase()}`);
+        }
+
+        // Inti Obfuscator (Mendukung Hybrid: API Cloudflare Worker & Browser Engine)
+        async function obfuscateCode() {
+            const codeInput = document.getElementById('input-code').value.trim();
+            if (!codeInput) {
+                showToast('Masukkan kode JavaScript terlebih dahulu!', 'alert-triangle', 'text-amber-500');
+                return;
+            }
+
+            const startTime = performance.now();
+            const btn = document.getElementById('btn-obfuscate');
+            
+            // Atur tombol ke status Loading
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            btn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> <span>Sedang Mengacak Kode...</span>';
+            lucide.createIcons();
+
+            // Kumpulkan data opsi konfigurasi
+            const isCompact = document.getElementById('opt-compact').checked;
+            const isSelfDefending = document.getElementById('opt-self-defending').checked;
+            const isRename = document.getElementById('opt-rename').checked;
+            const isStrings = document.getElementById('opt-strings').checked;
+            const isControlFlow = document.getElementById('opt-control-flow').checked;
+            const isDeadCode = document.getElementById('opt-dead-code').checked;
+
+            const obfuscationOptions = {
+                compact: isCompact,
+                selfDefending: isSelfDefending,
+                identifierNamesGenerator: isRename ? 'hexadecimal' : 'dictionary',
+                renameGlobals: isRename,
+                stringArray: isStrings,
+                stringArrayEncoding: isStrings ? ['base64'] : [],
+                stringArrayThreshold: isStrings ? 0.75 : 0,
+                controlFlowFlattening: isControlFlow,
+                controlFlowFlatteningThreshold: isControlFlow ? 0.75 : 0,
+                deadCodeInjection: isDeadCode,
+                deadCodeInjectionThreshold: isDeadCode ? 0.4 : 0
+            };
+
+            // JALUR 1: Jalankan dengan Cloudflare Worker API
+            if (engineMode === 'api') {
+                try {
+                    const response = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            code: codeInput,
+                            options: obfuscationOptions
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Gagal menghubungi API Worker.');
+                    }
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        document.getElementById('output-code').value = data.obfuscatedCode;
+                        updateLineNumbers('output-code', 'output-lines');
+
+                        // Hitung & Perbarui data statistik
+                        const originalBytes = data.stats.originalSize;
+                        const obfuscatedBytes = data.stats.obfuscatedSize;
+                        const totalTime = (performance.now() - startTime).toFixed(2);
+
+                        updateStatsUI(originalBytes, obfuscatedBytes, totalTime);
+                        showToast('Kode berhasil di-obfuscate lewat Backend Worker!', 'check-circle', 'text-emerald-500');
+                        
+                        finishObfuscation(btn);
+                        return; // Selesai jika sukses
+                    } else {
+                        throw new Error(data.error || 'Terjadi kesalahan pemrosesan server.');
+                    }
+
+                } catch (error) {
+                    console.warn("API Error, beralih otomatis ke mode offline / lokal:", error.message);
+                    showToast('Gagal terhubung ke API. Beralih otomatis ke mesin lokal!', 'wifi-off', 'text-amber-500');
+                    // Jangan langsung menyerah, lanjut eksekusi mode lokal di bawah ini (Fallback)
+                }
+            }
+
+            // JALUR 2: Jalankan Lokal di Browser Client (Fallback Engine)
+            try {
+                // Berikan jeda mikroskopis agar antarmuka UI browser sempat merender loading spinner sebelum CPU terbebani kompilasi berat
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                const obfuscationResult = JavaScriptObfuscator.obfuscate(codeInput, obfuscationOptions);
+                const resultText = obfuscationResult.getObfuscatedCode();
+
+                document.getElementById('output-code').value = resultText;
+                updateLineNumbers('output-code', 'output-lines');
+
+                // Hitung & Perbarui data statistik lokal
+                const originalBytes = new Blob([codeInput]).size;
+                const obfuscatedBytes = new Blob([resultText]).size;
+                const totalTime = (performance.now() - startTime).toFixed(2);
+
+                updateStatsUI(originalBytes, obfuscatedBytes, totalTime);
+                showToast('Kode berhasil di-obfuscate lokal di browser!', 'check-circle', 'text-emerald-500');
+
+            } catch (error) {
+                console.error(error);
+                showToast('Gagal memproses kode lokal. Periksa kembali sintaks kode Anda.', 'alert-circle', 'text-rose-500');
+            } finally {
+                finishObfuscation(btn);
+            }
+        }
+
+        // Update Nilai Statistik pada Layar
+        function updateStatsUI(originalBytes, obfuscatedBytes, totalTime) {
+            document.getElementById('stat-original-size').innerText = formatBytes(originalBytes);
+            document.getElementById('stat-obfuscated-size').innerText = formatBytes(obfuscatedBytes);
+            
+            const percentChange = ((obfuscatedBytes - originalBytes) / originalBytes * 100).toFixed(1);
+            const sign = percentChange > 0 ? '+' : '';
+            document.getElementById('stat-ratio').innerText = `${sign}${percentChange}%`;
+            
+            if (percentChange > 0) {
+                document.getElementById('stat-ratio').className = 'text-xs font-bold text-amber-600';
+            } else {
+                document.getElementById('stat-ratio').className = 'text-xs font-bold text-emerald-600';
+            }
+
+            document.getElementById('stat-time').innerText = `${totalTime} ms`;
+        }
+
+        // Mengembalikan State Tombol Setelah Selesai Memproses
+        function finishObfuscation(btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-80', 'cursor-not-allowed');
+            btn.innerHTML = '<i data-lucide="sparkles" class="w-4 h-4"></i> <span>Acak Kode Sekarang (Obfuscate)</span>';
+            lucide.createIcons();
+        }
+
+        // Format KB/Bytes
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Salin Output ke Clipboard
+        function copyOutput() {
+            const outCode = document.getElementById('output-code');
+            if (!outCode.value || outCode.value.startsWith('// Hasil')) {
+                showToast('Tidak ada kode hasil yang bisa disalin.', 'alert-triangle', 'text-amber-500');
+                return;
+            }
+
+            outCode.select();
+            outCode.setSelectionRange(0, 99999); // Kompatibilitas Mobile
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast('Kode berhasil disalin ke clipboard!');
+                } else {
+                    showToast('Gagal menyalin kode.', 'alert-circle', 'text-rose-500');
+                }
+            } catch (err) {
+                showToast('Gagal menyalin kode.', 'alert-circle', 'text-rose-500');
+            }
+        }
+
+        // Toast Helper
+        let toastTimeout;
+        function showToast(message, iconName = 'check-circle', iconColorClass = 'text-emerald-400') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            // Set pesan dan warna ikon
+            toastMessage.innerText = message;
+            toastIcon.setAttribute('data-lucide', iconName);
+            toastIcon.className = `w-4 h-4 ${iconColorClass}`;
+            lucide.createIcons(); // Instansiasi ikon baru yang di-inject ke HTML
+
+            // Efek pop-up
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            // Bersihkan timeout sebelumnya jika ada
+            clearTimeout(toastTimeout);
+
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Set Default demo saat pertama kali aplikasi dibuka
+        window.onload = function() {
+            loadDemoCode();
+        }
+    </script>
+</body>
+</html>
