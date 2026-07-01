@@ -761,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-                .modal-overlay-ad {
+                .modal-overlay-ads {
                     position: fixed;
                     inset: 0;
                     background: rgba(9, 9, 11, 0.6);
@@ -779,12 +779,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     box-sizing: border-box;
                 }
 
-                .modal-overlay-ad.show {
+                .modal-overlay-ads.show {
                     opacity: 1;
                     pointer-events: auto;
                 }
 
-                .modal-content-ad {
+                .modal-content-ads {
                     width: 100%;
                     max-width: 380px;
                     background: #ffffff;
@@ -799,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     box-sizing: border-box;
                 }
 
-                .modal-overlay-ad.show .modal-content-ad {
+                .modal-overlay-ads.show .modal-content-ads {
                     transform: scale(1) translateY(0);
                 }
 
@@ -844,7 +844,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     height: 12px;
                 }
 
-                .modal-content-ad h3 {
+                .modal-content-ads h3 {
                     margin: 8px 0 6px;
                     font-size: 11px;
                     font-weight: 600;
@@ -853,7 +853,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     color: #3b82f6;
                 }
 
-                .modal-content-ad h2 {
+                .modal-content-ads h2 {
                     margin: 0 0 16px;
                     font-size: 18px;
                     font-weight: 700;
@@ -929,17 +929,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 /* Penyesuaian khusus HP Layar Kecil */
                 @media (max-width: 360px) {
-                    .modal-content-ad {
+                    .modal-content-ads {
                         padding: 24px 16px 16px;
                     }
-                    .modal-content-ad h2 {
+                    .modal-content-ads h2 {
                         font-size: 16px;
                     }
                 }
             </style>
 
-            <div class="modal-overlay-ad" id="adModal">
-                <div class="modal-content-ad">
+            <div class="modal-overlay-ads" id="adModal">
+                <div class="modal-content-ads">
                     <button id="closeAdBtn" class="close-ads-btn" aria-label="Close ad">
                         <div class="close-ads-btn-inner">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
