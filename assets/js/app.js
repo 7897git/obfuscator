@@ -123,7 +123,7 @@ console.log("Kalkulasi Selesai:", laporan);`;
             document.getElementById('opt-rename').checked = true;
             document.getElementById('opt-strings').checked = true;
             document.getElementById('opt-control-flow').checked = false;
-            document.getElementById('opt-dead-code').checked = false;
+            document.getElementById('opt-deads-code').checked = false;
             showToast('Opsi kustomisasi telah direset.', 'rotate-ccw', 'text-slate-400');
         }
 
@@ -155,21 +155,21 @@ console.log("Kalkulasi Selesai:", laporan);`;
                 document.getElementById('opt-rename').checked = false;
                 document.getElementById('opt-strings').checked = false;
                 document.getElementById('opt-control-flow').checked = false;
-                document.getElementById('opt-dead-code').checked = false;
+                document.getElementById('opt-deads-code').checked = false;
             } else if (preset === 'medium') {
                 document.getElementById('opt-compact').checked = true;
                 document.getElementById('opt-self-defending').checked = false;
                 document.getElementById('opt-rename').checked = true;
                 document.getElementById('opt-strings').checked = true;
                 document.getElementById('opt-control-flow').checked = false;
-                document.getElementById('opt-dead-code').checked = false;
+                document.getElementById('opt-deads-code').checked = false;
             } else if (preset === 'high') {
                 document.getElementById('opt-compact').checked = true;
                 document.getElementById('opt-self-defending').checked = true;
                 document.getElementById('opt-rename').checked = true;
                 document.getElementById('opt-strings').checked = true;
                 document.getElementById('opt-control-flow').checked = true;
-                document.getElementById('opt-dead-code').checked = true;
+                document.getElementById('opt-deads-code').checked = true;
             }
 
             showToast(`Preset Proteksi: ${preset.toUpperCase()}`, 'sliders', 'text-brand-500');
@@ -198,7 +198,7 @@ console.log("Kalkulasi Selesai:", laporan);`;
             const isRename = document.getElementById('opt-rename').checked;
             const isStrings = document.getElementById('opt-strings').checked;
             const isControlFlow = document.getElementById('opt-control-flow').checked;
-            const isDeadCode = document.getElementById('opt-dead-code').checked;
+            const isDeadCode = document.getElementById('opt-deads-code').checked;
 
             const obfuscationOptions = {
                 compact: isCompact,
@@ -804,7 +804,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 /* Close button mobile friendly dengan area ketuk 44px */
-                .close-ad-btn {
+                .close-ads-btn {
                     position: absolute;
                     top: 12px;
                     right: 12px;
@@ -822,7 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     -webkit-tap-highlight-color: transparent;
                 }
 
-                .close-ad-btn-inner {
+                .close-ads-btn-inner {
                     background: rgba(0, 0, 0, 0.04);
                     width: 30px;
                     height: 30px;
@@ -833,13 +833,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     transition: all 0.2s ease;
                 }
 
-                .close-ad-btn:hover .close-ad-btn-inner {
+                .close-ads-btn:hover .close-ads-btn-inner {
                     background: rgba(0, 0, 0, 0.08);
                     color: #18181b;
                     transform: rotate(90deg);
                 }
 
-                .close-ad-btn svg {
+                .close-ads-btn svg {
                     width: 12px;
                     height: 12px;
                 }
@@ -862,7 +862,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     line-height: 1.3;
                 }
 
-                .ad-image-container {
+                .ads-image-container {
                     position: relative;
                     width: 100%;
                     height: 400px;
@@ -872,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     margin-bottom: 20px;
                 }
 
-                .ad-image {
+                .ads-image {
                     width: 100%;
                     height: auto;
                     display: block;
@@ -882,12 +882,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 /* Efek hover dinonaktifkan di layar sentuh agar transisi mulus */
                 @media (hover: hover) {
-                    .ad-image-container:hover .ad-image {
+                    .ads-image-container:hover .ads-image {
                         transform: scale(1.03);
                     }
                 }
 
-                .ad-link-btn {
+                .ads-link-btn {
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -905,23 +905,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     -webkit-tap-highlight-color: transparent;
                 }
 
-                .ad-link-btn:active {
+                .ads-link-btn:active {
                     background: #27272a;
                     transform: scale(0.98);
                 }
 
                 @media (hover: hover) {
-                    .ad-link-btn:hover {
+                    .ads-link-btn:hover {
                         background: #27272a;
                         box-shadow: 0 8px 20px -6px rgba(24, 24, 27, 0.4);
                         transform: translateY(-1px);
                     }
-                    .ad-link-btn:hover svg {
+                    .ads-link-btn:hover svg {
                         transform: translateX(3px);
                     }
                 }
 
-                .ad-link-btn svg {
+                .ads-link-btn svg {
                     width: 14px;
                     height: 14px;
                     transition: transform 0.2s ease;
@@ -940,8 +940,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="modal-overlay-ad" id="adModal">
                 <div class="modal-content-ad">
-                    <button id="closeAdBtn" class="close-ad-btn" aria-label="Close ad">
-                        <div class="close-ad-btn-inner">
+                    <button id="closeAdBtn" class="close-ads-btn" aria-label="Close ad">
+                        <div class="close-ads-btn-inner">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -951,13 +951,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3>Limited Offer</h3>
                     <h2>Promo Spesial Hari Ini!</h2>
 
-                    <div class="ad-image-container">
+                    <div class="ads-image-container">
                         <a href="${adTargetUrl}" target="_blank">
-                            <img src="${adImageUrl}" class="ad-image" alt="Iklan Promo">
+                            <img src="${adImageUrl}" class="ads-image" alt="Iklan Promo">
                         </a>
                     </div>
 
-                    <a href="${adTargetUrl}" target="_blank" class="ad-link-btn">
+                    <a href="${adTargetUrl}" target="_blank" class="ads-link-btn">
                         Cek Sekarang
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
