@@ -1,7 +1,9 @@
 ---
+layout: null
+permalink: /robots.txt
 ---
 
 User-agent: *
-Allow: {{ '/' | relative_url }}
+Allow: /
 
-Sitemap: {{ '/sitemap.xml' | relative_url }}
+Sitemap: {{ '/sitemap.xml' | absolute_url }}
