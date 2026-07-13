@@ -1,4 +1,7 @@
-User-agent: *
-Allow: /
+---
+---
 
-Sitemap: https://7897git.github.io/obfuscator/sitemap.xml
+User-agent: *
+Allow: {{ '/' | relative_url }}
+
+Sitemap: {{ '/sitemap.xml' | relative_url }}
